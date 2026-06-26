@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install package extras
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev,audio]"
+
+      - name: Run tests
+        run: |
+          python -m pytest -q
+
+      - name: Run ruff
+        run: |
+          python -m ruff check .
+
+      - name: Run strict public risk scan
+        run: |
+          ! grep -RInE '(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|gho_[A-Za-z0-9_]{20,}|Bearer [A-Za-z0-9._-]{20,}|BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY|stripe|clerk|server_required|controlled_distribution|local_wheel|gmail|imap|linkedin|credit_package|webhook_secret|Vrillsy|RailTaskLite|ForgeBoss|monster_|hybrid_saas|PRODUCT_|SECRET|TOKEN|API_KEY|PASSWORD|prompt_id|prompt_version|audio_engine\.)' README.md pyproject.toml LICENSE security reliability backend audio tests

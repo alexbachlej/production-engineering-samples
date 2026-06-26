@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "production-engineering-samples"
+version = "0.1.0"
+description = "Standalone production engineering samples: signing, atomic I/O, uploads, state machines, audio mapping."
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.5",
+]
+
+audio = [
+  "librosa>=0.10",
+  "numpy>=1.26",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+
+[tool.setuptools]
+packages = ["audio", "backend", "reliability", "security"]
